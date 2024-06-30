@@ -4,28 +4,47 @@
 import * as React from 'react'
 
 function UsernameForm({onSubmitUsername}) {
-  // 🐨 add a submit event handler here (`handleSubmit`).
-  // 💰 Make sure to accept the `event` as an argument and call
-  // `event.preventDefault()` to prevent the default behavior of form submit
-  // events (which refreshes the page).
-  // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
-  //
-  // 🐨 get the value from the username input (using whichever method
-  // you prefer from the options mentioned in the instructions)
-  // 💰 For example: event.target.elements[0].value
-  // 🐨 Call `onSubmitUsername` with the value of the input
+  // exercise 1
+  function handleSubmit(event) {
+    event.preventDefault()
+    console.log(event.target.elements)
+    const username = event.target.elements.usernameInput.value;
+    onSubmitUsername(username)
+  }
 
-  // 🐨 add the onSubmit handler to the <form> below
+  // extra credit 1
+  const inputRef = React.useRef();
+  function handleSubmitExtraCredit1(event) {
+    event.preventDefault()
+    const username = inputRef.current.value;
+    onSubmitUsername(username)
+  }
 
-  // 🐨 make sure to associate the label to the input.
-  // to do so, set the value of 'htmlFor' prop of the label to the id of input
+  // extra credit 2
+  const [errorMessage, setErrorMessage] = React.useState('');
+  function handleUsernameInputChange(event) {
+    const value = event.target.value;
+    const isValid = value === value.toLowerCase();
+    setErrorMessage(isValid ? '' : 'Username must be lower case');
+  }
+
+  // extra credit 3
+  const [inputValue, setInputValue] = React.useState('');
+  function handleUsernameInputChangeExtraCredit3(event) {
+    const value = event.target.value;
+    setInputValue(value.toLowerCase());
+  }
+
   return (
-    <form>
-      <div>
-        <label>Username:</label>
-        <input type="text" />
+    <form onSubmit={handleSubmitExtraCredit1}>
+      <div style={{display: 'flex', gap: 10}}>
+        <label htmlFor="usernameInput">Username:</label>
+        <div style={{display: 'flex', gap: 5, flexDirection: 'column'}}>
+          <input ref={inputRef} value={inputValue} id="usernameInput" type="text" onChange={handleUsernameInputChangeExtraCredit3} />
+          <span role="alert" style={{color: 'red', fontSize: 10}}>{errorMessage}</span>
+        </div>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={!!errorMessage}>Submit</button>
     </form>
   )
 }
